@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Booking detail</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/format.js"></script>
+<script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'bookings', crumbs: ['Bookings', 'BK-00001'] });
+
+  const b = OCR_DATA.bookings[0];
+  const cust = OCR_DATA.customers.find(c => c.id === b.customerId) || OCR_DATA.customers[0];
+  const broker = OCR_DATA.brokers.find(br => br.id === b.brokerId) || OCR_DATA.brokers[0];
+  const linkedReceipts = OCR_DATA.receipts.filter(r => r.unitId === b.unit).slice(0, 6);
+  const linkedDemands = OCR_DATA.demands.filter(d => d.unitNo === b.unit).slice(0, 4);
+
+  // Build payment progress
+  const cost = Number(b.totalUnitCost) || 0;
+  const received = Number(b.totalReceived) || 0;
+  const pct = Math.min(100, Math.round(received / cost * 100));
+
+  document.getElementById('content').innerHTML = `
+    <div class="page-head">
+      <div class="titles">
+        <span class="eyebrow eyebrow-gold">Booking · ${b.id}</span>
+        <h1 class="h-page" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">
+          <span>${cust.title} ${b.customerName}</span>
+          ${fmt.pillFor('status', b.status)}
+        </h1>
+        <p class="desc">${b.block} block · Unit <span class="num">${b.unit}</span> · ${b.type} · Booked ${fmt.date(b.bookingDate)} via ${broker.name}.</p>
+      </div>
+      <div class="row gap-2">
+        <button class="btn btn-ghost btn-sm">${svg('download', 'icon')} Booking form</button>
+        <button class="btn btn-ghost btn-sm">${svg('edit', 'icon')} Edit</button>
+        <button class="btn btn-gold btn-sm">${svg('plus', 'icon')} New receipt</button>
+      </div>
+    </div>
+
+    <!-- Hero strip: cost + payment progress -->
+    <section class="card mb-6" style="background: linear-gradient(180deg, var(--paper-1), var(--paper-2));">
+      <div class="card-pad-lg" style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:32px;">
+        <div>
+          <span class="eyebrow">Total unit cost</span>
+          <div class="num-display" style="font-size:3rem;margin-top:8px;">${fmt.inr(cost)}</div>
+          <div class="row gap-3 mt-3" style="font-size:0.84rem;color:var(--text-3);">
+            <span>BSP <span class="num text-subtle">${fmt.inr(b.amountBsp, {compact:true})}</span></span>
+            <span>·</span>
+            <span>EDC+IDC included</span>
+            <span>·</span>
+            <span>Area <span class="num text-subtle">${b.area} sqyd</span></span>
+          </div>
+        </div>
+        <div>
+          <span class="eyebrow">Received till date</span>
+          <div class="num-display text-mint" style="font-size:2.2rem;margin-top:8px;">${fmt.inr(received, {compact:true})}</div>
+          <div style="margin-top:14px;height:8px;border-radius:999px;overflow:hidden;background:var(--paper-3);box-shadow:inset 0 0 0 1px var(--border-1);">
+            <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--mint-1),var(--mint-2));"></div>
+          </div>
+          <div class="row between mt-2" style="font-size:0.78rem;">
+            <span class="num text-mint">${pct}% paid</span>
+            <span class="text-muted">of ${fmt.inr(cost, {compact:true})}</span>
+          </div>
+        </div>
+        <div>
+          <span class="eyebrow">Outstanding</span>
+          <div class="num-display ${b.outstanding > 0 ? 'text-rust' : 'text-mint'}" style="font-size:2.2rem;margin-top:8px;">${fmt.inr(b.outstanding, {compact:true})}</div>
+          <div class="row gap-2 mt-3" style="flex-wrap:wrap;">
+            <span class="pill pill-gold">${linkedDemands.length} demands issued</span>
+            <span class="pill pill-mint">${linkedReceipts.length} receipts cleared</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="detail-grid">
+      <div class="detail-stack">
+        <!-- Allottee + broker -->
+        <div class="card">
+          <div class="card-head">
+            <h3>Allottee &amp; broker</h3>
+            <a class="text-gold" style="font-size:0.82rem;" href="customer-detail.html">Open allottee profile →</a>
+          </div>
+          <div class="card-pad-lg">
+            <div class="row gap-4 mb-6">
+              <span class="av av-xl">${fmt.initials(cust.name)}</span>
+              <div class="col gap-2">
+                <span class="eyebrow">Allottee</span>
+                <h3 class="h-section">${cust.title} ${cust.name}</h3>
+                <div class="row gap-3 text-muted" style="font-size:0.86rem;flex-wrap:wrap;">
+                  <span class="row gap-2">${svg('phone')} <span class="num">${cust.phone}</span></span>
+                  <span class="row gap-2">${svg('mail')} ${cust.email}</span>
+                </div>
+                <div class="row gap-2 text-muted" style="font-size:0.86rem;">
+                  ${svg('mappin')} <span>${cust.address}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="attr-list">
+              <div class="attr"><span class="k">Aadhaar</span><span class="v num">${cust.aadharNo}</span></div>
+              <div class="attr"><span class="k">PAN</span><span class="v num">${cust.panNo}</span></div>
+              <div class="attr"><span class="k">Date of birth</span><span class="v num">${cust.dob}</span></div>
+              <div class="attr"><span class="k">Relation</span><span class="v">${cust.relation} ${cust.relationName}</span></div>
+              ${cust.isJoint ? `
+                <div class="attr"><span class="k">Joint allottee</span><span class="v">${cust.name2 || '—'}</span></div>
+                <div class="attr"><span class="k">Joint phone</span><span class="v num">${cust.phone2 || '—'}</span></div>
+              ` : ''}
+            </div>
+
+            <div class="divider mt-6 mb-6"></div>
+
+            <div class="row gap-4">
+              <span class="av av-lg">${fmt.initials(broker.name)}</span>
+              <div class="col gap-1" style="flex:1;">
+                <span class="eyebrow">Broker · ${broker.id}</span>
+                <h3 class="h-section">${broker.name}</h3>
+                <div class="row gap-3 text-muted" style="font-size:0.86rem;flex-wrap:wrap;">
+                  <span class="row gap-2">${svg('phone')} <span class="num">${broker.phone}</span></span>
+                  <span class="row gap-2">${svg('mail')} ${broker.email}</span>
+                  <span class="row gap-2">${svg('briefcase')} <span class="num">${broker.bookingsDone}</span> bookings</span>
+                </div>
+              </div>
+              <div class="col gap-2" style="text-align:right;">
+                <span class="eyebrow">Commission</span>
+                ${b.commissionPaid ? '<span class="pill pill-mint pill-lg">Paid</span>' : '<span class="pill pill-rust pill-lg">Outstanding</span>'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demand schedule preview -->
+        <div class="card">
+          <div class="card-head">
+            <h3>Demand schedule · ${b.paymentPlan}</h3>
+            <a class="text-gold" style="font-size:0.82rem;" href="demands.html">All demands →</a>
+          </div>
+          <div class="table-scroll">
+            <table class="data">
+              <thead><tr>
+                <th>Demand</th><th>Date</th><th class="col-money">Amount</th><th class="col-money">Receipt</th><th>Status</th>
+              </tr></thead>
+              <tbody>
+                ${linkedDemands.map((d, i) => `
+                  <tr>
+                    <td data-label="Demand" class="col-id">${fmt.shortId(d.id)}</td>
+                    <td data-label="Date" class="num text-subtle">${fmt.date(d.demandDate)}</td>
+                    <td data-label="Amount" class="col-money">${fmt.inr(d.total, {compact:true})}</td>
+                    <td data-label="Receipt" class="col-money">${i < linkedReceipts.length ? fmt.inr(linkedReceipts[i].amount, {compact:true}) : '—'}</td>
+                    <td data-label="Status">${fmt.pillFor('status', d.ready === 'Yes' ? 'cleared' : 'pending')}</td>
+                  </tr>
+                `).join('') || '<tr><td colspan="5" class="text-muted center" style="padding:24px;">No demands yet · run the demand generator</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Receipts -->
+        <div class="card">
+          <div class="card-head">
+            <h3>Receipts</h3>
+            <a class="text-gold" style="font-size:0.82rem;" href="receipts.html">All receipts →</a>
+          </div>
+          <div class="table-scroll">
+            <table class="data">
+              <thead><tr>
+                <th>Receipt no.</th><th>Date</th><th>Mode</th><th>Bank</th><th class="col-money">Amount</th><th>Status</th>
+              </tr></thead>
+              <tbody>
+                ${linkedReceipts.map(r => `
+                  <tr onclick="window.location='receipt-detail.html'" style="cursor:pointer;">
+                    <td data-label="Receipt" class="col-id">${r.receiptNo}</td>
+                    <td data-label="Date" class="num text-subtle">${fmt.date(r.date)}</td>
+                    <td data-label="Mode">${r.mode}</td>
+                    <td data-label="Bank">${r.bank}</td>
+                    <td data-label="Amount" class="col-money">${fmt.inr(r.amount, {compact:true})}</td>
+                    <td data-label="Status">${fmt.pillFor('status', r.status)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right rail -->
+      <aside class="detail-stack">
+        <div class="card card-pad-lg">
+          <span class="eyebrow eyebrow-gold">Unit & block</span>
+          <h3 class="h-section mt-2">${b.block} · ${b.unit}</h3>
+          <div class="attr-list mt-4">
+            <div class="attr"><span class="k">Type</span><span class="v">${b.type}</span></div>
+            <div class="attr"><span class="k">Area</span><span class="v num">${b.area} sqyd</span></div>
+            <div class="attr"><span class="k">BSP / sqyd</span><span class="v num">${fmt.inr(b.bsp)}</span></div>
+            <div class="attr"><span class="k">EDC + IDC</span><span class="v num">${fmt.inr(b.edcIdc)}</span></div>
+          </div>
+        </div>
+
+        <div class="card card-pad-lg" style="background: var(--ink-1); color: var(--ink-text);">
+          <span class="eyebrow" style="color: var(--ink-text-3);">Loan details</span>
+          <h3 class="h-section mt-2" style="color: var(--paper-1);">${b.loan === 'Yes' ? b.bankName : 'Self-funded'}</h3>
+          <p style="color: var(--ink-text-2); font-size: 0.86rem; margin-top: 8px;">
+            ${b.loan === 'Yes' ? 'Loan disbursed via ' + b.bankName + '. NOC issued. Tripartite agreement on file.' : 'No bank loan on this booking. All payments direct from the allottee.'}
+          </p>
+        </div>
+
+        <div class="card card-pad-lg">
+          <span class="eyebrow">Documents linked</span>
+          <div class="col gap-3 mt-3">
+            <div class="row between" style="padding:8px 0;border-bottom:1px dashed var(--border-1);">
+              <span style="font-size:0.88rem;">Allotment letter</span>
+              <span class="pill pill-mint">Issued</span>
+            </div>
+            <div class="row between" style="padding:8px 0;border-bottom:1px dashed var(--border-1);">
+              <span style="font-size:0.88rem;">ATS</span>
+              <span class="pill pill-mint">Registered</span>
+            </div>
+            <div class="row between" style="padding:8px 0;border-bottom:1px dashed var(--border-1);">
+              <span style="font-size:0.88rem;">Sale deed</span>
+              <span class="pill pill-gold">Pending</span>
+            </div>
+            <div class="row between" style="padding:8px 0;">
+              <span style="font-size:0.88rem;">Possession letter</span>
+              <span class="pill pill-naked">Not yet</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad-lg">
+          <span class="eyebrow">Activity</span>
+          <ol class="col gap-3 mt-3" style="list-style:none;padding:0;margin:0;font-size:0.84rem;">
+            <li class="col gap-1" style="border-left: 2px solid var(--gold-1); padding-left: 10px;">
+              <span class="num text-muted" style="font-size:0.74rem;">Today · 16:21</span>
+              <span>Receipt R-2024-0142 cleared via NEFT</span>
+            </li>
+            <li class="col gap-1" style="border-left: 2px solid var(--border-2); padding-left: 10px;">
+              <span class="num text-muted" style="font-size:0.74rem;">26 Apr 2026</span>
+              <span>Demand DM-00012 issued</span>
+            </li>
+            <li class="col gap-1" style="border-left: 2px solid var(--border-2); padding-left: 10px;">
+              <span class="num text-muted" style="font-size:0.74rem;">02 Apr 2026</span>
+              <span>ATS registered · Vide 421, Book 18</span>
+            </li>
+            <li class="col gap-1" style="border-left: 2px solid var(--border-2); padding-left: 10px;">
+              <span class="num text-muted" style="font-size:0.74rem;">15 Mar 2026</span>
+              <span>Booking created by Tarun</span>
+            </li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  `;
+</script>
+</body>
+</html>

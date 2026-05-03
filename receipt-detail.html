@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Receipt detail</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'receipts', crumbs: ['Receipts', 'R-2024-0001'] });
+  const r = OCR_DATA.receipts[0];
+
+  document.getElementById('content').innerHTML = `
+    <div class="page-head">
+      <div class="titles">
+        <span class="eyebrow eyebrow-gold">Receipt · ${r.receiptNo}</span>
+        <h1 class="h-page" style="display:flex;align-items:baseline;gap:14px;">
+          ${fmt.inr(r.amount)} ${fmt.pillFor('status', r.status)}
+        </h1>
+        <p class="desc">From <strong>${r.customerName}</strong> · Unit <span class="num">${r.unitId}</span> · ${r.mode} via ${r.bank} on ${fmt.date(r.date)}</p>
+      </div>
+      <div class="row gap-2">
+        <button class="btn btn-ghost btn-sm">${svg('download','icon')} Receipt PDF</button>
+        <button class="btn btn-gold btn-sm">${svg('check','icon')} Mark cleared</button>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-stack">
+        <!-- Receipt preview (paper) -->
+        <div class="card" style="background: var(--paper-1); border: 1px solid var(--border-2);">
+          <div class="card-pad-lg" style="padding: 56px 56px 48px;">
+            <div class="row between" style="border-bottom: 2px solid var(--ink-1); padding-bottom: 18px;">
+              <div>
+                <div class="font-serif" style="font-size:1.6rem;font-weight:380;letter-spacing:-0.02em;">Spice One Builders Pvt Ltd</div>
+                <div class="text-muted" style="font-size:0.8rem;margin-top:2px;">CIN U70109HR2018PTC001234 · GSTIN 06AAACS1234L1ZH</div>
+              </div>
+              <div style="text-align:right;">
+                <span class="eyebrow">Receipt no.</span>
+                <div class="num font-mono" style="font-size:1.2rem;font-weight:500;margin-top:2px;">${r.receiptNo}</div>
+              </div>
+            </div>
+
+            <div class="grid-2 mt-6" style="gap: 32px;">
+              <div class="col gap-3">
+                <div class="attr"><span class="k">Received from</span><span class="v" style="font-size:1.05rem;font-weight:500;">${r.customerName}</span></div>
+                <div class="attr"><span class="k">For unit</span><span class="v num">${r.unitId}</span></div>
+                <div class="attr"><span class="k">On account of</span><span class="v">${r.paymentOnAccountOf}</span></div>
+              </div>
+              <div class="col gap-3">
+                <div class="attr"><span class="k">Date</span><span class="v num">${fmt.date(r.date)}</span></div>
+                <div class="attr"><span class="k">Mode</span><span class="v">${r.mode} · ${r.bank}</span></div>
+                <div class="attr"><span class="k">Cheque / Ref no.</span><span class="v num">${r.chequeNo}</span></div>
+              </div>
+            </div>
+
+            <div class="mt-8" style="background: var(--paper-2); padding: 22px; border-radius: 8px; border: 1px solid var(--border-1);">
+              <div class="row between">
+                <span class="eyebrow">Amount received</span>
+                <span class="num-display" style="font-size:2rem;color:var(--evergreen-1);">${fmt.inr(r.amount)}</span>
+              </div>
+              <div class="text-muted mt-2" style="font-size:0.86rem;font-style:italic;">Rupees Two Lakh Twenty Five Thousand only</div>
+            </div>
+
+            <div class="row between mt-8" style="padding-top:32px;border-top:1px dashed var(--border-2);">
+              <div class="col">
+                <span class="eyebrow">Authorised signatory</span>
+                <div class="font-serif mt-3" style="font-size:1.1rem;font-style:italic;color:var(--text-2);">— Tarun Singh Tanwar</div>
+              </div>
+              <div class="col" style="text-align:right;">
+                <span class="eyebrow">Issued at</span>
+                <div class="text-muted mt-1" style="font-size:0.84rem;">Rohtak office</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="detail-stack">
+        <div class="card card-pad-lg">
+          <span class="eyebrow eyebrow-gold">Bank reconciliation</span>
+          <div class="col gap-3 mt-3" style="font-size:0.88rem;">
+            <div class="row between"><span class="text-subtle">Statement match</span><span class="pill pill-mint">Found</span></div>
+            <div class="row between"><span class="text-subtle">Bank reference</span><span class="num text-subtle" style="font-size:0.8rem;">UTR/${r.chequeNo}</span></div>
+            <div class="row between"><span class="text-subtle">Cleared on</span><span class="num">${fmt.date(r.date)}</span></div>
+          </div>
+        </div>
+
+        <div class="card card-pad-lg">
+          <span class="eyebrow">Linked records</span>
+          <div class="col gap-2 mt-3" style="font-size:0.88rem;">
+            <a href="booking-detail.html" class="row gap-2" style="padding:8px 0;border-bottom:1px dashed var(--border-1);">${svg('file-text','icon')} Booking BK-00001 <span class="text-muted" style="margin-left:auto;font-size:0.76rem;">→</span></a>
+            <a href="customer-detail.html" class="row gap-2" style="padding:8px 0;border-bottom:1px dashed var(--border-1);">${svg('users','icon')} Allottee profile <span class="text-muted" style="margin-left:auto;font-size:0.76rem;">→</span></a>
+            <a href="demand-detail.html" class="row gap-2" style="padding:8px 0;">${svg('send','icon')} Against demand DM-00001 <span class="text-muted" style="margin-left:auto;font-size:0.76rem;">→</span></a>
+          </div>
+        </div>
+
+        <div class="card card-pad-lg" style="background: var(--ink-1); color: var(--ink-text);">
+          <span class="eyebrow" style="color: var(--ink-text-3);">Cheque image</span>
+          <div style="margin-top:12px;height:140px;border:1px dashed var(--ink-3);border-radius:6px;display:grid;place-items:center;color:var(--ink-text-3);font-size:0.78rem;">cheque-${r.chequeNo}.jpg</div>
+          <button class="btn mt-3" style="background:var(--ink-3);color:var(--paper-1);width:100%;justify-content:center;">${svg('download','icon')} Open original</button>
+        </div>
+      </aside>
+    </div>
+  `;
+</script>
+</body></html>

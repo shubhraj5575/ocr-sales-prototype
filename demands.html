@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Demands</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Collections</span>
+          <h1 class="h-page">Demand register</h1>
+          <p class="desc">Issued payment demands across all bookings. Generate the next cycle on the 5th of every month.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Filters</button>
+          <button class="btn btn-ghost btn-sm">Export PDF batch</button>
+          <button class="btn btn-gold btn-sm">+ Run demand generator</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi kpi-feature" style="grid-column: span 2;"><span class="label">Total demanded · 2026</span><div class="value">₹38.4 <span style="font-size:1.2rem;color:var(--gold-2);font-style:italic;">Cr</span></div><div class="sub">Across 619 demand notices issued YTD</div></div>
+        <div class="kpi"><span class="label">Cleared</span><div class="value text-mint">412</div><div class="sub">66.6% of total</div></div>
+        <div class="kpi"><span class="label">Pending</span><div class="value text-gold">207</div><div class="sub">Includes interest accrual</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All demands</span>
+        <span class="filter-pill">Pending</span>
+        <span class="filter-pill">Cleared</span>
+        <span class="filter-pill">With interest</span>
+        <span class="filter-pill">This month</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar"><span class="eyebrow">40 of 619 shown</span><div class="grow"></div><button class="btn btn-subtle btn-sm">Sort by amount</button></div>
+        <div class="table-scroll"><table class="data" id="demands-table"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'demands', crumbs: ['Demands'] });
+  document.getElementById('demands-table').innerHTML = `
+    <thead><tr><th>Demand</th><th>Allottee</th><th>Unit</th><th>Date</th><th>Plan</th><th class="col-money">Total</th><th class="col-money">Interest</th><th>Status</th></tr></thead>
+    <tbody>
+      ${OCR_DATA.demands.map(d => `
+        <tr onclick="window.location='demand-detail.html'" style="cursor:pointer;">
+          <td data-label="Demand" class="col-id">${fmt.shortId(d.id)}</td>
+          <td data-label="Allottee"><span class="cell-name"><span class="av av-sm">${fmt.initials(d.customerName)}</span><span>${d.customerName}</span></span></td>
+          <td data-label="Unit"><span class="num">${d.unitNo}</span></td>
+          <td data-label="Date" class="num text-subtle">${fmt.date(d.demandDate)}</td>
+          <td data-label="Plan"><span class="text-subtle" style="font-size:0.82rem;">${d.paymentPlan}</span></td>
+          <td data-label="Total" class="col-money">${fmt.inr(d.total, {compact:true})}</td>
+          <td data-label="Interest" class="col-money text-rust">${fmt.inr(d.interest, {compact:true})}</td>
+          <td data-label="Status">${fmt.pillFor('status', d.ready === 'Yes' ? 'cleared' : 'pending')}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+</script>
+</body></html>

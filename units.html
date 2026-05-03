@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Unit master</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Inventory</span>
+          <h1 class="h-page">Unit master</h1>
+          <p class="desc">All 1,045 units across blocks. Live status: available, booked, sold, blocked.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Block plan view</button>
+          <button class="btn btn-gold btn-sm">+ Bulk import</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi"><span class="label">Total units</span><div class="value">1,045</div><div class="sub">Across 4 blocks</div></div>
+        <div class="kpi"><span class="label">Available</span><div class="value text-mint">198</div><div class="sub">Ready to allocate</div></div>
+        <div class="kpi"><span class="label">Booked</span><div class="value text-evergreen">734</div><div class="sub">70% of inventory</div></div>
+        <div class="kpi"><span class="label">Blocked / hold</span><div class="value text-rust">42</div><div class="sub">Pending payment</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All blocks</span>
+        <span class="filter-pill">Alpha</span>
+        <span class="filter-pill">Beta</span>
+        <span class="filter-pill">Gamma</span>
+        <span class="filter-pill">Delta</span>
+        <span class="filter-pill">Available only</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar"><span class="eyebrow">50 of 1,045 shown</span><div class="grow"></div><button class="btn btn-subtle btn-sm">Group by block</button></div>
+        <div class="table-scroll"><table class="data" id="units-table"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'units', crumbs: ['Unit master'] });
+  document.getElementById('units-table').innerHTML = `
+    <thead><tr><th>Code</th><th>Block</th><th>Unit no.</th><th>Type</th><th>Floor</th><th class="col-num">Area (sqyd)</th><th>Status</th></tr></thead>
+    <tbody>
+      ${OCR_DATA.units.map(u => `
+        <tr style="cursor:pointer;">
+          <td data-label="Code" class="col-id">${u.code}</td>
+          <td data-label="Block">${u.block}</td>
+          <td data-label="Unit no." class="num">${u.unitNo}</td>
+          <td data-label="Type">${u.type}</td>
+          <td data-label="Floor" class="num text-subtle">${u.floorNo}</td>
+          <td data-label="Area" class="col-num">${u.areaSqyd}</td>
+          <td data-label="Status">${fmt.pillFor('status', u.status)}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+</script>
+</body></html>

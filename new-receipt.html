@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · New receipt</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Quick create</span>
+          <h1 class="h-page">Record receipt</h1>
+          <p class="desc">Log a payment received from an allottee. Receipt number, balance update and PDF letter generate automatically.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm" onclick="window.location='receipts.html'">Cancel</button>
+          <button class="btn btn-gold btn-sm" onclick="window.location='receipt-detail.html'">Save &amp; generate receipt</button>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <form onsubmit="event.preventDefault();window.location='receipt-detail.html'" class="col gap-6">
+          <div class="fieldset">
+            <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Booking</span>
+            <div class="form-grid">
+              <div class="field full"><label>Find by allottee or unit</label>
+                <select><option>— Search 1,211 bookings —</option><option selected>BK-00001 · Aarav Sharma · Beta-127 · ₹1.71 Cr</option></select>
+              </div>
+            </div>
+            <div class="grid-3 mt-4" style="gap:12px;">
+              <div class="card card-pad" style="background:var(--paper-1);"><span class="eyebrow">Total cost</span><div class="num mt-2" style="font-weight:500;">₹1,71,57,500</div></div>
+              <div class="card card-pad" style="background:var(--paper-1);"><span class="eyebrow">Received</span><div class="num mt-2 text-mint" style="font-weight:500;">₹84,20,000</div></div>
+              <div class="card card-pad" style="background:var(--paper-1);"><span class="eyebrow">Outstanding</span><div class="num mt-2 text-rust" style="font-weight:500;">₹87,37,500</div></div>
+            </div>
+          </div>
+
+          <div class="fieldset">
+            <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Payment</span>
+            <div class="form-grid">
+              <div class="field"><label>Amount</label><input class="num" type="number" placeholder="2,25,000" value="225000"></div>
+              <div class="field"><label>Date received</label><input type="date" value="2026-05-03"></div>
+              <div class="field"><label>Mode</label>
+                <select><option selected>NEFT</option><option>RTGS</option><option>Cheque</option><option>DD</option><option>UPI</option><option>Cash</option></select>
+              </div>
+              <div class="field"><label>On account of</label>
+                <select><option selected>BSP</option><option>EDC + IDC</option><option>IFMS</option><option>Other Charges</option><option>Interest</option></select>
+              </div>
+              <div class="field"><label>Bank</label>
+                <select><option selected>HDFC Bank</option><option>ICICI Bank</option><option>SBI</option><option>Axis Bank</option><option>Kotak Mahindra</option></select>
+              </div>
+              <div class="field"><label>Cheque / RTGS / NEFT no.</label><input class="num" placeholder="142567"></div>
+              <div class="field full"><label>Branch</label><input value="Rohtak Main Branch"></div>
+              <div class="field full"><label>Remark</label><input placeholder="Any internal note…"></div>
+            </div>
+          </div>
+
+          <div class="fieldset">
+            <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Cheque / DD / RTGS image (optional)</span>
+            <div style="border:2px dashed var(--border-2);border-radius:10px;padding:24px;text-align:center;background:var(--paper-1);">
+              <div class="font-serif" style="font-size:1.05rem;">Upload image of the instrument</div>
+              <div class="text-muted mt-2" style="font-size:0.84rem;">JPG / PNG / PDF · max 5 MB</div>
+              <button type="button" class="btn btn-subtle btn-sm mt-3">Choose file</button>
+            </div>
+          </div>
+        </form>
+
+        <aside class="detail-stack">
+          <div class="card card-pad-lg" style="background: var(--ink-1); color: var(--ink-text); position: sticky; top: 88px;">
+            <span class="eyebrow" style="color: var(--ink-text-3);">Live preview</span>
+            <h3 class="h-section mt-2" style="color: var(--paper-1);">Receipt R-2026-0146</h3>
+            <div class="col gap-3 mt-4" style="font-size:0.86rem;">
+              <div class="row between"><span style="color: var(--ink-text-2);">Allottee</span><span style="color: var(--paper-1);">Aarav Sharma</span></div>
+              <div class="row between"><span style="color: var(--ink-text-2);">Unit</span><span class="num" style="color: var(--paper-1);">Beta-127</span></div>
+              <div class="row between"><span style="color: var(--ink-text-2);">Mode</span><span style="color: var(--paper-1);">NEFT · HDFC Bank</span></div>
+              <div class="row between"><span style="color: var(--ink-text-2);">Reference</span><span class="num" style="color: var(--paper-1);">142567</span></div>
+            </div>
+            <div class="divider" style="background: var(--ink-3); margin: 16px 0;"></div>
+            <div class="row between">
+              <span class="eyebrow" style="color: var(--ink-text-3);">Amount</span>
+              <span class="num-display" style="color: var(--gold-2); font-size: 1.6rem;">₹2,25,000</span>
+            </div>
+            <p style="color: var(--ink-text-3); font-size: 0.78rem; margin-top: 16px;">After saving · new outstanding becomes ₹85,12,500. Receipt PDF will be generated and emailed to the allottee.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>Shell.init({ active: 'new-receipt', crumbs: ['New receipt'] });</script>
+</body></html>

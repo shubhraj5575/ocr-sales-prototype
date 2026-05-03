@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Documents made</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Documents</span>
+          <h1 class="h-page">Documents made</h1>
+          <p class="desc">Auto-generated allotment letters, ATS, sale deeds, and possession letters. Vide / Book / Jild numbers tracked for stamp duty.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Stamp duty register</button>
+          <button class="btn btn-gold btn-sm">+ Generate document</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi"><span class="label">Total documents</span><div class="value">3,266</div><div class="sub">Across 4 types</div></div>
+        <div class="kpi"><span class="label">Allotment letters</span><div class="value">1,211</div><div class="sub">One per booking</div></div>
+        <div class="kpi"><span class="label">ATS registered</span><div class="value text-mint">982</div><div class="sub">81% of bookings</div></div>
+        <div class="kpi"><span class="label">Sale deeds</span><div class="value text-evergreen">724</div><div class="sub">Possession granted</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All types</span>
+        <span class="filter-pill">Allotment Letter</span>
+        <span class="filter-pill">Agreement to Sell</span>
+        <span class="filter-pill">Sale Deed</span>
+        <span class="filter-pill">Possession Letter</span>
+        <span class="filter-pill">Receipt</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar"><span class="eyebrow">40 of 3,266 shown</span><div class="grow"></div><button class="btn btn-subtle btn-sm">Sort by date</button></div>
+        <div class="table-scroll"><table class="data" id="d-table"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'documents', crumbs: ['Documents'] });
+  document.getElementById('d-table').innerHTML = `
+    <thead><tr><th>Doc ID</th><th>Type</th><th>Allottee</th><th>Unit</th><th>Date</th><th>Vide no.</th><th>Book no.</th><th class="col-money">Unit cost</th><th>Status</th></tr></thead>
+    <tbody>
+      ${OCR_DATA.documents.map(d => `
+        <tr style="cursor:pointer;">
+          <td data-label="Doc ID" class="col-id">${d.id}</td>
+          <td data-label="Type"><span class="pill pill-naked">${d.type}</span></td>
+          <td data-label="Allottee"><span class="cell-name"><span class="av av-sm">${fmt.initials(d.customerName)}</span><span>${d.customerName}</span></span></td>
+          <td data-label="Unit"><span class="num">${d.unitId}</span></td>
+          <td data-label="Date" class="num text-subtle">${fmt.date(d.date)}</td>
+          <td data-label="Vide" class="num">${d.vide}</td>
+          <td data-label="Book" class="num">${d.book}</td>
+          <td data-label="Cost" class="col-money">${fmt.inr(d.totalUnitCost, {compact:true})}</td>
+          <td data-label="Status">${fmt.pillFor('status', d.complete === 'Yes' ? 'cleared' : d.complete === 'Pending' ? 'pending' : 'no')}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+</script>
+</body></html>

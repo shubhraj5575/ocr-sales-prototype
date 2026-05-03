@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Site visits</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Sales pipeline</span>
+          <h1 class="h-page">Site visits</h1>
+          <p class="desc">Lead capture log — every walk-in, online lead, and broker-sourced visit. Convert to bookings.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Calendar view</button>
+          <button class="btn btn-gold btn-sm">+ Log visit</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi"><span class="label">This month</span><div class="value">24</div><div class="sub">Visits logged</div></div>
+        <div class="kpi"><span class="label">Conversions</span><div class="value text-mint">7</div><div class="sub">29% conversion rate</div></div>
+        <div class="kpi"><span class="label">Avg time-to-book</span><div class="value">11 d</div><div class="sub">Visit → booking</div></div>
+        <div class="kpi"><span class="label">Top source</span><div class="value" style="font-size:1.6rem;line-height:1.2;margin-top:14px;">Online lead</div><div class="sub">38% of recent visits</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All visits</span>
+        <span class="filter-pill">Walk-in</span>
+        <span class="filter-pill">Online lead</span>
+        <span class="filter-pill">Referral</span>
+        <span class="filter-pill">Broker</span>
+        <span class="filter-pill">Converted</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar"><span class="eyebrow">24 visits</span><div class="grow"></div><button class="btn btn-subtle btn-sm">Sort by date</button></div>
+        <div class="table-scroll"><table class="data" id="sv-table"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'site-visits', crumbs: ['Site visits'] });
+  document.getElementById('sv-table').innerHTML = `
+    <thead><tr><th>SVC</th><th>Visitor</th><th>Phone</th><th>Date / time</th><th>Source</th><th>Marketing</th><th>Sales</th><th>Notes</th></tr></thead>
+    <tbody>
+      ${OCR_DATA.siteVisits.map(s => `
+        <tr style="cursor:pointer;">
+          <td data-label="SVC" class="col-id">${s.svcId}</td>
+          <td data-label="Visitor"><span class="cell-name"><span class="av av-sm">${fmt.initials(s.name)}</span><span>${s.name}</span></span></td>
+          <td data-label="Phone" class="num text-subtle">${s.phone}</td>
+          <td data-label="Date" class="num text-subtle">${s.dateTime}</td>
+          <td data-label="Source"><span class="pill pill-naked">${s.source}</span></td>
+          <td data-label="Marketing"><span class="text-subtle">${s.marketingStaff}</span></td>
+          <td data-label="Sales"><span class="text-subtle">${s.salesStaff}</span></td>
+          <td data-label="Notes" class="text-subtle ellipsis" style="max-width:30ch;">${s.comments}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+</script>
+</body></html>

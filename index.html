@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Sign in</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="login-shell">
+
+  <aside class="login-art">
+    <div class="brand-block">
+      <div class="brand">OCR <span class="accent">Sales</span></div>
+      <div class="tag">One Group · Real estate sales OS</div>
+    </div>
+
+    <div class="pull">
+      A complete record of <span class="gold">every booking,</span> every demand, every rupee — under one roof.
+    </div>
+
+    <div class="meta anim-stagger">
+      <div class="item">
+        <span class="num">1,211</span>
+        <span class="lbl">Active bookings</span>
+      </div>
+      <div class="item">
+        <span class="num">₹213&nbsp;Cr</span>
+        <span class="lbl">Collected to date</span>
+      </div>
+      <div class="item">
+        <span class="num">19</span>
+        <span class="lbl">Connected modules</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="login-form">
+    <form class="login-card anim-stagger" onsubmit="event.preventDefault();window.location='dashboard.html'">
+      <div>
+        <div class="eyebrow eyebrow-gold mb-2">Welcome back</div>
+        <div class="heading">Sign in to your<br>workspace.</div>
+      </div>
+
+      <div class="field">
+        <label for="email">Work email</label>
+        <input id="email" type="email" value="tech2@onecity.in" autocomplete="email" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" value="••••••••" autocomplete="current-password" required>
+        <span class="hint">Use your One Group SSO credentials.</span>
+      </div>
+
+      <button class="btn btn-primary" type="submit" style="justify-content:center;padding:12px 14px;font-size:0.95rem;">
+        Continue to dashboard
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:2px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+
+      <div class="divider"></div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="eyebrow">Need help?</span>
+        <a href="#" style="font-size:0.82rem;color:var(--gold-1);">Contact tech support</a>
+      </div>
+    </form>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Allottees</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Sales pipeline</span>
+          <h1 class="h-page">Allottees</h1>
+          <p class="desc">Customer master · 1,174 allottees including joint and third bookings, with KYC documents and full purchase history.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Filters</button>
+          <button class="btn btn-gold btn-sm">+ New allottee</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi"><span class="label">Total allottees</span><div class="value">1,174</div><div class="sub">Across 1,211 bookings</div></div>
+        <div class="kpi"><span class="label">Joint bookings</span><div class="value">428</div><div class="sub">36% of all bookings</div></div>
+        <div class="kpi"><span class="label">KYC complete</span><div class="value text-mint">1,089</div><div class="sub">Aadhaar &amp; PAN on file</div></div>
+        <div class="kpi"><span class="label">KYC pending</span><div class="value text-rust">85</div><div class="sub">Reach out before next demand</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All allottees</span>
+        <span class="filter-pill">Joint bookings</span>
+        <span class="filter-pill">Loan applicants</span>
+        <span class="filter-pill">KYC pending</span>
+        <span class="filter-pill">Repeat customers</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="eyebrow">60 of 1,174 shown</span>
+          <div class="grow"></div>
+          <button class="btn btn-subtle btn-sm">Sort by recency</button>
+        </div>
+        <div class="table-scroll">
+          <table class="data" id="customers-table"></table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/format.js"></script>
+<script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'customers', crumbs: ['Allottees'] });
+
+  const t = document.getElementById('customers-table');
+  t.innerHTML = `
+    <thead>
+      <tr>
+        <th>Allottee</th><th>Unit</th><th>Phone</th><th>Aadhaar</th><th>PAN</th><th>Address</th><th>Booking type</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${OCR_DATA.customers.map(c => `
+        <tr onclick="window.location='customer-detail.html'" style="cursor:pointer;">
+          <td data-label="Allottee">
+            <span class="cell-name">
+              <span class="av av-sm">${fmt.initials(c.name)}</span>
+              <span>
+                <span style="display:block;">${c.title} ${c.name}</span>
+                ${c.isJoint ? '<span class="text-muted" style="font-size:0.74rem;">+ ' + c.name2 + (c.isThird ? ' + ' + c.name3 : '') + '</span>' : ''}
+              </span>
+            </span>
+          </td>
+          <td data-label="Unit"><span class="num">${c.unit}</span></td>
+          <td data-label="Phone" class="num text-subtle">${c.phone}</td>
+          <td data-label="Aadhaar" class="num text-subtle">${c.aadharNo}</td>
+          <td data-label="PAN" class="num text-subtle">${c.panNo}</td>
+          <td data-label="Address" class="text-subtle ellipsis" style="max-width: 22ch;">${c.address}</td>
+          <td data-label="Booking">${c.isThird ? '<span class="pill pill-evergreen">Third</span>' : c.isJoint ? '<span class="pill pill-gold">Joint</span>' : '<span class="pill pill-naked">Single</span>'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+</script>
+</body>
+</html>

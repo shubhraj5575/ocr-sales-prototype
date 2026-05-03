@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Bookings</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Sales pipeline</span>
+          <h1 class="h-page">Bookings</h1>
+          <p class="desc">Every booking ever recorded — across all blocks, brokers, and payment plans. Click any row to inspect.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filters
+          </button>
+          <button class="btn btn-ghost btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <a class="btn btn-gold btn-sm" href="new-booking.html">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New booking
+          </a>
+        </div>
+      </div>
+
+      <!-- Summary strip -->
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi"><span class="label">Total bookings</span><div class="value">1,211</div><div class="sub">Across 13 payment plans</div></div>
+        <div class="kpi"><span class="label">Active</span><div class="value text-mint">967</div><div class="sub">79.8% of all bookings</div></div>
+        <div class="kpi"><span class="label">Cancelled / transferred</span><div class="value text-rust">76</div><div class="sub">6.3% with re-allocation</div></div>
+        <div class="kpi"><span class="label">Commission paid</span><div class="value text-gold">168</div><div class="sub">86% commissions outstanding</div></div>
+      </section>
+
+      <!-- Filter pills -->
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All bookings <span class="num">1,211</span></span>
+        <span class="filter-pill">Active <span class="num">967</span></span>
+        <span class="filter-pill">Pending approval <span class="num">42</span></span>
+        <span class="filter-pill">Cancelled <span class="num">61</span></span>
+        <span class="filter-pill">Transferred <span class="num">15</span></span>
+        <span class="filter-pill">Commission unpaid <span class="num">1,043</span></span>
+        <span class="filter-pill">With loan <span class="num">389</span></span>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="eyebrow">80 of 1,211 shown</span>
+          <div class="grow"></div>
+          <button class="btn btn-subtle btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            Columns
+          </button>
+          <button class="btn btn-subtle btn-sm">Group by block</button>
+        </div>
+        <div class="table-scroll">
+          <table class="data" id="bookings-table"></table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/format.js"></script>
+<script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'bookings', crumbs: ['Bookings'] });
+
+  const t = document.getElementById('bookings-table');
+  const rows = OCR_DATA.bookings;
+  t.innerHTML = `
+    <thead>
+      <tr>
+        <th>Booking key</th>
+        <th>Allottee</th>
+        <th>Unit</th>
+        <th>Type</th>
+        <th>Booked</th>
+        <th class="col-money">Total cost</th>
+        <th class="col-money">Received</th>
+        <th>Plan</th>
+        <th>Broker</th>
+        <th>Status</th>
+        <th>Comm.</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rows.map(b => `
+        <tr onclick="window.location='booking-detail.html'" style="cursor:pointer;">
+          <td data-label="Booking" class="col-id">${fmt.shortId(b.id)}</td>
+          <td data-label="Allottee">
+            <span class="cell-name">
+              <span class="av av-sm">${fmt.initials(b.customerName)}</span>
+              <span>${b.customerName}</span>
+            </span>
+          </td>
+          <td data-label="Unit"><span class="num">${b.block} · ${b.unit}</span></td>
+          <td data-label="Type"><span class="text-subtle">${b.type}</span></td>
+          <td data-label="Booked" class="num text-subtle">${fmt.date(b.bookingDate)}</td>
+          <td data-label="Total cost" class="col-money">${fmt.inr(b.totalUnitCost, {compact:true})}</td>
+          <td data-label="Received" class="col-money text-mint">${fmt.inr(b.totalReceived, {compact:true})}</td>
+          <td data-label="Plan"><span class="text-subtle" style="font-size:0.82rem;">${b.paymentPlan}</span></td>
+          <td data-label="Broker"><span class="text-subtle" style="font-size:0.82rem;">${b.brokerName}</span></td>
+          <td data-label="Status">${fmt.pillFor('status', b.status)}</td>
+          <td data-label="Commission">${b.commissionPaid ? '<span class="pill pill-mint">Paid</span>' : '<span class="pill pill-naked">Due</span>'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · New booking</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Quick create</span>
+          <h1 class="h-page">New booking</h1>
+          <p class="desc">Capture allottee, unit, and payment plan. Booking key and OCR will be auto-assigned on save.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm" onclick="window.location='bookings.html'">Cancel</button>
+          <button class="btn btn-primary btn-sm">Save as draft</button>
+          <button class="btn btn-gold btn-sm" onclick="alert('Mockup only — no submit')">Create booking</button>
+        </div>
+      </div>
+
+      <form onsubmit="event.preventDefault();window.location='booking-detail.html'" class="col gap-6">
+
+        <div class="fieldset">
+          <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Step 1 · Allottee</span>
+          <div class="form-grid">
+            <div class="field"><label>Allottee · select existing or new</label>
+              <select><option>— Search by name, phone, or Aadhaar —</option><option selected>Aarav Sharma · CUST-0001</option></select>
+              <span class="hint">Type to search across 1,174 existing allottees, or click "+ New" to create.</span>
+            </div>
+            <div class="field"><label>Booking type</label>
+              <select><option selected>Single</option><option>Joint (2 allottees)</option><option>Joint (3 allottees)</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fieldset">
+          <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Step 2 · Unit selection</span>
+          <div class="form-grid">
+            <div class="field"><label>Block</label><select><option selected>Beta</option><option>Alpha</option><option>Gamma</option><option>Delta</option></select></div>
+            <div class="field"><label>Unit no.</label><select><option selected>Beta-127 · 250 sqyd · Available</option></select></div>
+            <div class="field"><label>Type</label><input value="Plot" readonly></div>
+            <div class="field"><label>Area (sqyd)</label><input class="num" value="250" readonly></div>
+          </div>
+        </div>
+
+        <div class="fieldset">
+          <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Step 3 · Pricing</span>
+          <div class="form-grid">
+            <div class="field"><label>BSP (₹ per sqyd)</label><input class="num" type="number" value="62500"></div>
+            <div class="field"><label>EDC + IDC (₹ per sqyd)</label><input class="num" type="number" value="2800"></div>
+            <div class="field"><label>GST %</label><input class="num" type="number" value="5"></div>
+            <div class="field"><label>Other charges (IFMS · LS)</label><input class="num" type="number" value="125000"></div>
+            <div class="field full">
+              <label>Computed total unit cost</label>
+              <div style="padding:14px;background:var(--paper-2);border-radius:6px;border:1px solid var(--border-1);display:flex;align-items:baseline;gap:14px;">
+                <span class="num-display" style="font-size:2rem;color:var(--evergreen-1);">₹1,71,57,500</span>
+                <span class="text-muted" style="font-size:0.84rem;">= 250 × (62,500 + 2,800) × 1.05 + 1,25,000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fieldset">
+          <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Step 4 · Payment plan &amp; broker</span>
+          <div class="form-grid">
+            <div class="field"><label>Payment plan</label><select><option selected>Construction Linked · 11 stages</option><option>Down Payment Plan</option><option>Time Linked Plan</option></select></div>
+            <div class="field"><label>Broker</label><select><option>— No broker (direct) —</option><option selected>Arjun Sharma · BRK-001 · 315 bookings</option></select></div>
+            <div class="field"><label>Loan?</label><select><option>No</option><option selected>Yes</option></select></div>
+            <div class="field"><label>Bank name</label><input value="HDFC Bank" placeholder="If loan = Yes"></div>
+            <div class="field full"><label>Comments / special terms</label><textarea rows="3" placeholder="Any rebates, special pricing, or internal notes…"></textarea></div>
+          </div>
+        </div>
+
+        <div class="fieldset">
+          <span class="eyebrow eyebrow-gold mb-4" style="display:block;">Step 5 · Booking form upload</span>
+          <div style="border:2px dashed var(--border-2);border-radius:12px;padding:32px;text-align:center;background:var(--paper-1);">
+            <div class="font-serif" style="font-size:1.2rem;">Drop the signed booking form here</div>
+            <div class="text-muted mt-2" style="font-size:0.86rem;">PDF or scanned image · max 10 MB · Drive backup automatic</div>
+            <button type="button" class="btn btn-subtle btn-sm mt-4">Choose file</button>
+          </div>
+        </div>
+
+        <div class="row between" style="padding-top: 16px;">
+          <span class="text-muted" style="font-size:0.84rem;">All edits saved to draft every 30 s</span>
+          <div class="row gap-2">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="window.location='bookings.html'">Cancel</button>
+            <button type="submit" class="btn btn-gold btn-sm">Create booking →</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>Shell.init({ active: 'new-booking', crumbs: ['New booking'] });</script>
+</body></html>

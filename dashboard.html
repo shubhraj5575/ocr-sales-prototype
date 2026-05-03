@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Dashboard</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Sunday · 03 May 2026</span>
+          <h1 class="h-page">Good evening, Tarun.</h1>
+          <p class="desc">Here is what's moving today across bookings, collections, and document workflows.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export snapshot
+          </button>
+          <a href="new-booking.html" class="btn btn-gold btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New booking
+          </a>
+        </div>
+      </div>
+
+      <!-- KPI Row -->
+      <section class="kpi-grid anim-stagger" style="margin-bottom: 28px;">
+        <div class="kpi kpi-feature" style="grid-column: span 2;">
+          <span class="label">Total collected · all time</span>
+          <div class="value">₹213.42 <span style="font-size:1.4rem;color:var(--gold-2);font-style:italic;">Cr</span></div>
+          <div class="trend">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            +₹4.8 Cr this month
+          </div>
+          <div class="sub">Across 2,904 receipts from 1,174 allottees.</div>
+        </div>
+        <div class="kpi">
+          <span class="label">Outstanding</span>
+          <div class="value">₹18.74 <span style="font-size:1.1rem;color:var(--rust-1);">Cr</span></div>
+          <div class="trend down">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            973 units past due
+          </div>
+          <div class="sub">Demands sent: 619 · awaiting clearance.</div>
+        </div>
+        <div class="kpi">
+          <span class="label">Bookings</span>
+          <div class="value">1,211</div>
+          <div class="trend">+18 last 30 days</div>
+          <div class="sub">35 brokers active across the panel.</div>
+        </div>
+      </section>
+
+      <!-- Two column: activity feed + collection meter -->
+      <section class="grid-2 mb-8" style="grid-template-columns: 1.45fr 1fr;">
+
+        <!-- Recent bookings -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">Pipeline</span>
+              <h3 style="margin-top:2px;">Recent bookings</h3>
+            </div>
+            <a class="btn btn-ghost btn-sm" href="bookings.html">View all <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+          <div class="table-scroll">
+            <table class="data" id="recent-bookings"></table>
+          </div>
+        </div>
+
+        <!-- Commission meter -->
+        <div class="card card-pad-lg" style="background: linear-gradient(180deg, var(--paper-1), var(--paper-2));">
+          <span class="eyebrow">Broker commissions</span>
+          <h3 class="h-section mt-2">168 paid · 1,043 due</h3>
+          <div style="margin-top:18px;height:12px;border-radius:999px;overflow:hidden;background:var(--paper-3);box-shadow:inset 0 0 0 1px var(--border-1);">
+            <div style="width:13.9%;height:100%;background:linear-gradient(90deg,var(--gold-1),var(--gold-2));"></div>
+          </div>
+          <div class="row between" style="margin-top:8px;">
+            <span class="num text-mint" style="font-size:0.82rem;">13.9% paid</span>
+            <span class="num text-rust" style="font-size:0.82rem;">86.1% pending</span>
+          </div>
+
+          <div class="divider" style="margin: 22px 0 16px;"></div>
+
+          <span class="eyebrow">Top brokers · Q1 2026</span>
+          <div id="top-brokers" style="display:flex;flex-direction:column;gap:10px;margin-top:12px;"></div>
+        </div>
+      </section>
+
+      <!-- Quick links -->
+      <section class="grid-3 anim-stagger">
+
+        <a class="card card-pad" href="demands.html" style="text-decoration:none;">
+          <span class="eyebrow eyebrow-gold">Collections</span>
+          <h3 class="h-section mt-2">619 demands<br>awaiting payment</h3>
+          <p class="text-muted mt-3" style="font-size:0.86rem;">Generate the next monthly demand cycle in two clicks. Review balance interest and issue on the 5th.</p>
+          <div class="row mt-4 text-gold" style="font-size:0.82rem;font-weight:500;">Open demand inbox <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+        </a>
+
+        <a class="card card-pad" href="receipts.html" style="text-decoration:none;">
+          <span class="eyebrow eyebrow-gold">Cash flow</span>
+          <h3 class="h-section mt-2">2,904 receipts<br>recorded this year</h3>
+          <p class="text-muted mt-3" style="font-size:0.86rem;">Cleared, pending and bounced — track every transaction. Reconcile bank statements against allottee payments.</p>
+          <div class="row mt-4 text-gold" style="font-size:0.82rem;font-weight:500;">Open receipts ledger <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+        </a>
+
+        <a class="card card-pad" href="documents.html" style="text-decoration:none;">
+          <span class="eyebrow eyebrow-gold">Legal</span>
+          <h3 class="h-section mt-2">3,266 documents<br>generated</h3>
+          <p class="text-muted mt-3" style="font-size:0.86rem;">Allotment letters, ATS, sale deeds, possession letters. All linked to bookings, ready for stamp duty submission.</p>
+          <div class="row mt-4 text-gold" style="font-size:0.82rem;font-weight:500;">Open document vault <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+        </a>
+
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/format.js"></script>
+<script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'dashboard', crumbs: ['Dashboard'], search: true });
+
+  // Recent bookings table (slice 6)
+  const recent = OCR_DATA.bookings.slice(0, 6);
+  const rb = document.getElementById('recent-bookings');
+  rb.innerHTML = `
+    <thead>
+      <tr>
+        <th>Booking</th><th>Allottee</th><th>Unit</th><th class="col-money">Cost</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${recent.map(b => `
+        <tr onclick="window.location='booking-detail.html'" style="cursor:pointer;">
+          <td data-label="Booking" class="col-id">${fmt.shortId(b.id)}</td>
+          <td data-label="Allottee">
+            <span class="cell-name">
+              <span class="av av-sm">${fmt.initials(b.customerName)}</span>
+              <span>${b.customerName}</span>
+            </span>
+          </td>
+          <td data-label="Unit"><span class="num text-subtle">${b.block} · ${b.unit}</span></td>
+          <td data-label="Cost" class="col-money">${fmt.inr(b.totalUnitCost, {compact:true})}</td>
+          <td data-label="Status">${fmt.pillFor('status', b.status)}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+
+  // Top brokers (slice 5)
+  const tb = document.getElementById('top-brokers');
+  const sorted = [...OCR_DATA.brokers]
+    .sort((a,b) => Number(b.bookingsDone) - Number(a.bookingsDone))
+    .slice(0, 5);
+  const max = Math.max(...sorted.map(b => Number(b.bookingsDone)));
+  tb.innerHTML = sorted.map(b => `
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="av av-sm">${fmt.initials(b.name)}</span>
+      <span style="font-size:0.88rem;flex:1;min-width:0;" class="ellipsis">${b.name}</span>
+      <span class="num text-subtle" style="font-size:0.78rem;">${b.bookingsDone}</span>
+      <div style="width:84px;height:6px;background:var(--paper-3);border-radius:999px;overflow:hidden;">
+        <div style="width:${(Number(b.bookingsDone)/max*100)}%;height:100%;background:var(--gold-1);"></div>
+      </div>
+    </div>
+  `).join('');
+</script>
+</body>
+</html>

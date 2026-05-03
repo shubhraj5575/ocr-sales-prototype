@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Outstanding</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Collections</span>
+          <h1 class="h-page">Outstanding balances</h1>
+          <p class="desc">Live derived view — total sale price minus total received, per allottee. Sorted by amount due.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Aging report</button>
+          <button class="btn btn-gold btn-sm">+ Bulk demand</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi kpi-feature" style="grid-column: span 2;"><span class="label">Total outstanding</span><div class="value">₹18.74 <span style="font-size:1.2rem;color:var(--gold-2);font-style:italic;">Cr</span></div><div class="sub">Across 973 allottees with balance</div></div>
+        <div class="kpi"><span class="label">90+ days overdue</span><div class="value text-rust">₹6.2 Cr</div><div class="sub">312 cases — escalation</div></div>
+        <div class="kpi"><span class="label">Avg outstanding</span><div class="value">₹1.93 L</div><div class="sub">Per allottee with balance</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All blocks</span>
+        <span class="filter-pill">Alpha</span>
+        <span class="filter-pill">Beta</span>
+        <span class="filter-pill">90+ days</span>
+        <span class="filter-pill">>₹10 L outstanding</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar"><span class="eyebrow">50 of 973 shown</span><div class="grow"></div><button class="btn btn-subtle btn-sm">Sort by amount</button></div>
+        <div class="table-scroll"><table class="data" id="o-table"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'outstanding', crumbs: ['Outstanding'] });
+  const sorted = [...OCR_DATA.outstanding].sort((a,b) => b.outstanding - a.outstanding);
+  const max = sorted[0] ? sorted[0].outstanding : 1;
+  document.getElementById('o-table').innerHTML = `
+    <thead><tr><th>Allottee</th><th>Block</th><th>Unit</th><th class="col-money">Sale price</th><th class="col-money">Received</th><th class="col-money">Outstanding</th><th>Progress</th></tr></thead>
+    <tbody>
+      ${sorted.map(o => {
+        const w = max ? Math.round(o.outstanding / max * 100) : 0;
+        const paidPct = o.totalSalePrice ? Math.round(o.totalReceived / o.totalSalePrice * 100) : 0;
+        return `<tr style="cursor:pointer;">
+          <td data-label="Allottee"><span class="cell-name"><span class="av av-sm">${fmt.initials(o.customerName)}</span><span>${o.customerName}</span></span></td>
+          <td data-label="Block">${o.block}</td>
+          <td data-label="Unit"><span class="num">${o.unitId}</span></td>
+          <td data-label="Sale price" class="col-money">${fmt.inr(o.totalSalePrice, {compact:true})}</td>
+          <td data-label="Received" class="col-money text-mint">${fmt.inr(o.totalReceived, {compact:true})}</td>
+          <td data-label="Outstanding" class="col-money ${o.outstanding > 0 ? 'text-rust' : 'text-mint'}">${fmt.inr(o.outstanding, {compact:true})}</td>
+          <td data-label="Progress">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:120px;height:6px;background:var(--paper-3);border-radius:999px;overflow:hidden;"><div style="width:${paidPct}%;height:100%;background:${o.outstanding > 0 ? 'var(--rust-2)' : 'var(--mint-1)'};"></div></div>
+              <span class="num text-muted" style="font-size:0.78rem;">${paidPct}%</span>
+            </div>
+          </td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  `;
+</script>
+</body></html>

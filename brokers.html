@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Brokers</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Sales pipeline</span>
+          <h1 class="h-page">Brokers</h1>
+          <p class="desc">Channel partners on the panel. Track bookings sourced, commissions earned, and KYC.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Filters</button>
+          <button class="btn btn-gold btn-sm">+ Add broker</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi"><span class="label">Active brokers</span><div class="value">35</div><div class="sub">Sourcing live in 2026</div></div>
+        <div class="kpi"><span class="label">Total bookings sourced</span><div class="value">1,211</div><div class="sub">Lifetime through panel</div></div>
+        <div class="kpi"><span class="label">Avg commission rate</span><div class="value">2.0%</div><div class="sub">Of total unit cost</div></div>
+        <div class="kpi"><span class="label">Commission outstanding</span><div class="value text-rust">₹4.6 Cr</div><div class="sub">Across 1,043 bookings</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All brokers</span>
+        <span class="filter-pill">Top 10</span>
+        <span class="filter-pill">Commission due</span>
+        <span class="filter-pill">Inactive 90+ days</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar"><span class="eyebrow">35 brokers</span><div class="grow"></div><button class="btn btn-subtle btn-sm">Sort by bookings</button></div>
+        <div class="table-scroll"><table class="data" id="brokers-table"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/format.js"></script>
+<script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'brokers', crumbs: ['Brokers'] });
+
+  const sorted = [...OCR_DATA.brokers].sort((a,b) => Number(b.bookingsDone) - Number(a.bookingsDone));
+  const max = Math.max(...sorted.map(b => Number(b.bookingsDone)));
+
+  document.getElementById('brokers-table').innerHTML = `
+    <thead><tr><th>Broker</th><th>Phone</th><th>Email</th><th>Aadhaar</th><th>PAN</th><th class="col-num">Bookings</th><th>Volume</th></tr></thead>
+    <tbody>
+      ${sorted.map(b => {
+        const w = Math.round(Number(b.bookingsDone) / max * 100);
+        return `<tr style="cursor:pointer;">
+          <td data-label="Broker"><span class="cell-name"><span class="av av-sm">${fmt.initials(b.name)}</span><span><span style="display:block;">${b.name}</span><span class="text-muted num" style="font-size:0.72rem;">${b.id}</span></span></span></td>
+          <td data-label="Phone" class="num text-subtle">${b.phone}</td>
+          <td data-label="Email" class="text-subtle">${b.email}</td>
+          <td data-label="Aadhaar" class="num text-subtle">${b.aadharNo}</td>
+          <td data-label="PAN" class="num text-subtle">${b.panNo}</td>
+          <td data-label="Bookings" class="col-num">${b.bookingsDone}</td>
+          <td data-label="Volume"><div style="width:120px;height:6px;background:var(--paper-3);border-radius:999px;overflow:hidden;"><div style="width:${w}%;height:100%;background:var(--gold-1);"></div></div></td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  `;
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OCR Sales · Receipts</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+    <header class="topbar" id="topbar"></header>
+    <div class="content">
+      <div class="page-head">
+        <div class="titles">
+          <span class="eyebrow eyebrow-gold">Collections</span>
+          <h1 class="h-page">Receipts ledger</h1>
+          <p class="desc">Every payment received — cleared, pending, or bounced. Reconcile against bank statements.</p>
+        </div>
+        <div class="row gap-2">
+          <button class="btn btn-ghost btn-sm">Bank reconciliation</button>
+          <a class="btn btn-gold btn-sm" href="new-receipt.html">+ New receipt</a>
+        </div>
+      </div>
+
+      <section class="kpi-grid mb-6 anim-stagger" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="kpi kpi-feature" style="grid-column: span 2;"><span class="label">Total collected</span><div class="value">₹213.42 <span style="font-size:1.2rem;color:var(--gold-2);font-style:italic;">Cr</span></div><div class="sub">2,904 receipts · all years</div></div>
+        <div class="kpi"><span class="label">This month</span><div class="value text-mint">₹4.8 Cr</div><div class="sub">86 receipts cleared</div></div>
+        <div class="kpi"><span class="label">Bounced</span><div class="value text-rust">14</div><div class="sub">Pending recovery</div></div>
+      </section>
+
+      <div class="row gap-2 mb-4" style="flex-wrap:wrap;">
+        <span class="filter-pill active">All receipts</span>
+        <span class="filter-pill">Cleared</span>
+        <span class="filter-pill">Pending</span>
+        <span class="filter-pill">Bounced</span>
+        <span class="filter-pill">NEFT / RTGS</span>
+        <span class="filter-pill">Cheque</span>
+        <span class="filter-pill">UPI</span>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar"><span class="eyebrow">60 of 2,904 shown</span><div class="grow"></div><button class="btn btn-subtle btn-sm">Sort by date</button></div>
+        <div class="table-scroll"><table class="data" id="r-table"></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<script src="assets/data.js"></script><script src="assets/format.js"></script><script src="assets/shell.js"></script>
+<script>
+  Shell.init({ active: 'receipts', crumbs: ['Receipts'] });
+  document.getElementById('r-table').innerHTML = `
+    <thead><tr><th>Receipt no.</th><th>Allottee</th><th>Unit</th><th>Date</th><th>Mode</th><th>Bank</th><th>Cheque/Ref</th><th>On account of</th><th class="col-money">Amount</th><th>Status</th></tr></thead>
+    <tbody>
+      ${OCR_DATA.receipts.map(r => `
+        <tr onclick="window.location='receipt-detail.html'" style="cursor:pointer;">
+          <td data-label="Receipt" class="col-id">${r.receiptNo}</td>
+          <td data-label="Allottee"><span class="cell-name"><span class="av av-sm">${fmt.initials(r.customerName)}</span><span>${r.customerName}</span></span></td>
+          <td data-label="Unit"><span class="num">${r.unitId}</span></td>
+          <td data-label="Date" class="num text-subtle">${fmt.date(r.date)}</td>
+          <td data-label="Mode">${r.mode}</td>
+          <td data-label="Bank">${r.bank}</td>
+          <td data-label="Cheque" class="num text-subtle">${r.chequeNo}</td>
+          <td data-label="Account">${r.paymentOnAccountOf}</td>
+          <td data-label="Amount" class="col-money">${fmt.inr(r.amount, {compact:true})}</td>
+          <td data-label="Status">${fmt.pillFor('status', r.status)}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+</script>
+</body></html>
